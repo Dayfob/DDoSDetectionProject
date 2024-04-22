@@ -4,13 +4,13 @@ from sklearn.model_selection import train_test_split
 from sklearn import metrics
 from sklearn.feature_selection import RFE
 
-data_set = pd.read_csv('datasets/dataset-preprocessed.csv')
-
-var = data_set.loc[(data_set['syn_flag_number'] == 1.0) & (data_set['label'] == "BenignTraffic")]
-
-print(data_set["syn_flag_number"].value_counts())
-print(var['syn_flag_number'])
-print(var['label'])
+# data_set = pd.read_csv('datasets/dataset-preprocessed.csv')
+#
+# var = data_set.loc[(data_set['syn_flag_number'] == 1.0) & (data_set['label'] == "BenignTraffic")]
+#
+# print(data_set["syn_flag_number"].value_counts())
+# print(var['syn_flag_number'])
+# print(var['label'])
 
 # Random Forest Feature Importances ====================================================================================
 
@@ -99,25 +99,25 @@ print(var['label'])
 # new_data_set.to_csv('datasets/dimensionality_reduction/backward_feature_elimination/data-set-correlation-orange-1-backward.csv',
 #                                    index=False)
 
-# features = new_data_set.iloc[:, :-1].values
-# labels = pd.factorize(new_data_set.iloc[:, -1].values)[0]
+# features = data_set.iloc[:, :-1].values
+# labels = pd.factorize(data_set.iloc[:, -1].values)[0]
 #
 # features_train, features_test, labels_train, labels_test = train_test_split(
 #     features, labels, test_size=0.2, random_state=1234
 # )
 #
 # skit_model = RandomForestClassifier()
-# # rfe = RFE(skit_model, n_features_to_select=5, step=1)
-# # rfe.fit(features_train, labels_train)
+# rfe = RFE(skit_model, n_features_to_select=1, step=1)
+# rfe.fit(features_train, labels_train)
 # skit_model.fit(features_train, labels_train)
 #
 #
-# # print("Backward Feature Elimination")
-# # print('\n\nFEATUERS SELECTED\n\n')
-# # print(rfe.support_)
-# #
-# # print('\n\nRANKING OF FEATURES\n\n')
-# # print(rfe.ranking_)
+# print("Backward Feature Elimination")
+# print('\n\nFEATUERS SELECTED\n\n')
+# print(rfe.support_)
+#
+# print('\n\nRANKING OF FEATURES\n\n')
+# print(rfe.ranking_)
 #
 # predictions = skit_model.predict(features_test)
 # loss_function = metrics.log_loss(labels_test, predictions)

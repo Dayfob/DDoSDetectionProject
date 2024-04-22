@@ -121,7 +121,8 @@ import time
 #
 # print([features[i] for i in indices])
 
-def print_results(skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test):
+def print_results(name, skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test,
+                  skit_model_rf_time, skit_model_tree_time, skit_model_knn_time):
     for model in [skit_model_rf, skit_model_tree, skit_model_knn]:
         start = time.time()
         predictions = model.predict(features_test)
@@ -134,7 +135,16 @@ def print_results(skit_model_rf, skit_model_tree, skit_model_knn, features_test,
         recall = metrics.recall_score(labels_test, predictions)
         roc_auc = metrics.roc_auc_score(labels_test, predictions)
 
-        print("train_model_preprocessed_knn")
+        if model == skit_model_rf:
+            print(name + "_random_forest")
+            print(f"train_time = {skit_model_rf_time}")
+        elif model == skit_model_tree:
+            print(name + "_tree")
+            print(f"train_time = {skit_model_tree_time}")
+        elif model == skit_model_knn:
+            print(name + "_knn")
+            print(f"train_time = {skit_model_knn_time}")
+
         print(f"predict_time = {stop - start}")
         print(f"loss_function = {loss_function}")
         print(f"f1_score = {f1_score}")
@@ -157,17 +167,28 @@ def train_models(data_set):
     skit_model_tree = DecisionTreeClassifier()
     skit_model_knn = KNeighborsClassifier()
 
+    start = time.time()
     skit_model_rf.fit(features_train, labels_train)
+    stop = time.time()
+    skit_model_rf_time = stop - start
+    start = time.time()
     skit_model_tree.fit(features_train, labels_train)
+    stop = time.time()
+    skit_model_tree_time = stop - start
+    start = time.time()
     skit_model_knn.fit(features_train, labels_train)
+    stop = time.time()
+    skit_model_knn_time = stop - start
 
-    return skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test
+    return (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test,
+            skit_model_rf_time, skit_model_tree_time, skit_model_knn_time)
 
 
 def train_model_preprocessed():
     data_set = pd.read_csv('datasets/dataset-preprocessed.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_preprocessed_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -182,18 +203,23 @@ def train_model_preprocessed():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_preprocessed",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
 def train_model_syn_flag():
     data_set = pd.read_csv('datasets/dimensionality_reduction/random_forest_feature_importances/dataset-syn-flag.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_syn_flag_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -208,18 +234,23 @@ def train_model_syn_flag():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_syn_flag",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
 def train_model_red():
     data_set = pd.read_csv('datasets/dimensionality_reduction/low_variance_filter/dataset-red.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_red_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -234,18 +265,23 @@ def train_model_red():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_red",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
 def train_model_orange():
     data_set = pd.read_csv('datasets/dimensionality_reduction/low_variance_filter/dataset-orange.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_orange_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -260,18 +296,23 @@ def train_model_orange():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_orange",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
 def train_model_yellow():
     data_set = pd.read_csv('datasets/dimensionality_reduction/low_variance_filter/dataset-yellow.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_yellow_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -286,11 +327,15 @@ def train_model_yellow():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_yellow",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
@@ -299,7 +344,8 @@ def train_model_correlation_orange():
         'datasets/dimensionality_reduction/high_correlation_filter/data-set-correlation-orange-1.csv'
     )
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_correlation_orange_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -314,11 +360,15 @@ def train_model_correlation_orange():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_correlation_orange",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
@@ -326,7 +376,8 @@ def train_model_correlation_orange_backward():
     data_set = pd.read_csv(
         'datasets/dimensionality_reduction/backward_feature_elimination/data-set-correlation-orange-1-backward.csv')
 
-    skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test = train_models(data_set)
+    (skit_model_rf, skit_model_tree, skit_model_knn, features_test, labels_test, skit_model_rf_time,
+     skit_model_tree_time, skit_model_knn_time) = train_models(data_set)
 
     with open('model/model_correlation_orange_backward_rf.pkl', 'wb') as f:
         pickle.dump(skit_model_rf, f)
@@ -341,11 +392,15 @@ def train_model_correlation_orange_backward():
     # predictions = model_from_pickle.predict(features_test)
 
     print_results(
+        "model_correlation_orange_backward",
         skit_model_rf,
         skit_model_tree,
         skit_model_knn,
         features_test,
-        labels_test
+        labels_test,
+        skit_model_rf_time,
+        skit_model_tree_time,
+        skit_model_knn_time
     )
 
 
